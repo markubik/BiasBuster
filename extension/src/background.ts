@@ -10,7 +10,7 @@ export interface BasicPrediction {
 }
 
 export interface Bias {
-    bias: 'UNBIASED' | 'BIASED' | 'STRONGLY_BIASED'
+    bias: 'BALANCED' | 'TAKING_STANCE' | 'MISLEADING' | 'BIASED' | 'STRONGLY_BIASED'
     predictions: {
         hatespeech: BasicPrediction & { prediction: HateSpeechType },
         hyperpartisan: BasicPrediction & { prediction: HyperpartisanType },
@@ -20,11 +20,9 @@ export interface Bias {
 
 const results = {};
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
     chrome.runtime.onMessage.addListener(
         function messageListener(message: Message) {
-            console.log('waidomosc');
-            console.log(message);
             if (message.type === 'PAGE_INITIALIZED') {
                 handlePageInitialized(tabId);
             }
@@ -41,12 +39,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 async function fetchData(url: string, timeout = 8000) {
     const controller = new AbortController();
     const id = setTimeout(() => {
-        chrome.action.setIcon({ path: "/icons/Error-icon.png" });
+        setIcon("/icons/Error-icon.png");
         controller.abort();
     }, timeout);
-    chrome.action.setIcon({ path: "/icons/loading-icon.png" });
+    setIcon("/icons/loading-icon.png");
 
-    const result = await fetch('http://localhost:5000/resource', {
+    const result = await fetch('http://52.149.65.149:5000/predict', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -66,12 +64,17 @@ function generateKeyFromStringUrl(url: string): string {
     return `${hostname}:${domain}`;
 }
 
+function setIcon(path) {
+    console.log('path');
+    console.log(path);
+    chrome.action.setIcon({ path });
+}
 async function handlePageInitialized(tabId) {
     chrome.tabs.get(tabId, async tab => {
-        chrome.action.setIcon({ path: "/icons/scale-icon.png" });
+        setIcon("/icons/scale-icon.png");
         let result = await fetchData(tab.url);
         if (!result.ok) {
-            chrome.action.setIcon({ path: "/icons/Error-icon.png" });
+            setIcon("/icons/Error-icon.png");
             return;
         }
         result = await result.json();
@@ -84,22 +87,22 @@ async function handlePageInitialized(tabId) {
 
 function handleIcon(bias) {
     switch (bias) {
-        case 'UNBIASED':
-            chrome.action.setIcon({ path: "/icons/Flag-green-icon.png" });
+        case 'BALANCED':
+            setIcon("/icons/Flag-green-icon.png");
             return;
+        case 'MISLEADING':
+        case 'TAKING_STANCE':
         case 'BIASED':
-            chrome.action.setIcon({ path: "/icons/Flag-yellow-icon.png" });
+            setIcon("/icons/Flag-yellow-icon.png");
             return;
         case 'STRONGLY_BIASED':
-            chrome.action.setIcon({ path: "/icons/Flag-red-icon.png" });
+            setIcon("/icons/Flag-red-icon.png");
             return;
     }
 }
 function handlePopupInitialized(pageUrl) {
     const result = results[generateKeyFromStringUrl(pageUrl)];
     if (result) {
-        console.log('jadymy');
-        console.log(pageUrl);
         chrome.runtime.sendMessage({ type: 'SEND_DATA', data: results[generateKeyFromStringUrl(pageUrl)] })
     } else {
         chrome.runtime.sendMessage({ type: 'ERROR', data: "Something went wrong" });
