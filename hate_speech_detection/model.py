@@ -5,7 +5,7 @@ import torch.nn.functional as F
 MODEL_PATH = './model'
 
 class HateSpeechModel:
-    labels = ['HATE_SPEECH', 'OFFENSIVE',  'NORMAL']
+    labels = ['HATE_SPEECH', 'NORMAL', 'OFFENSIVE']
 
     def __init__(self):
         self.tokenizer = None

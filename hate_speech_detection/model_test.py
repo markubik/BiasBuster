@@ -39,7 +39,7 @@ def test_model():
     end_time = time.time()
     print('Model predicted:', prediction, 'in', end_time-start_time, 'seconds')
 
-    assert(prediction == 'OFFENSIVE')
+    assert(prediction == 'NORMAL')
 
 
 if __name__ == '__main__':
