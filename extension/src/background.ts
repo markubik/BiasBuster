@@ -23,7 +23,8 @@ const results = {};
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     chrome.runtime.onMessage.addListener(
         function messageListener(message: Message) {
-            chrome.runtime.onMessage.removeListener(messageListener);
+            console.log('waidomosc');
+            console.log(message);
             if (message.type === 'PAGE_INITIALIZED') {
                 handlePageInitialized(tabId);
             }
@@ -67,7 +68,7 @@ function generateKeyFromStringUrl(url: string): string {
 
 async function handlePageInitialized(tabId) {
     chrome.tabs.get(tabId, async tab => {
-        chrome.action.setIcon({ path: "/icons/cat-icon.png" });
+        chrome.action.setIcon({ path: "/icons/scale-icon.png" });
         let result = await fetchData(tab.url);
         if (!result.ok) {
             chrome.action.setIcon({ path: "/icons/Error-icon.png" });
@@ -97,6 +98,8 @@ function handleIcon(bias) {
 function handlePopupInitialized(pageUrl) {
     const result = results[generateKeyFromStringUrl(pageUrl)];
     if (result) {
+        console.log('jadymy');
+        console.log(pageUrl);
         chrome.runtime.sendMessage({ type: 'SEND_DATA', data: results[generateKeyFromStringUrl(pageUrl)] })
     } else {
         chrome.runtime.sendMessage({ type: 'ERROR', data: "Something went wrong" });
