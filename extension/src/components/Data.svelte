@@ -17,25 +17,30 @@
   <Card padded>
     {#if !biasScore.predictions?.hatespeech?.error}
       <SingleResult
-        label="Communication type"
+        label="Language"
         value={biasScore.predictions?.hatespeech.prediction}
       >
-        Communication type tooltip
+        A measure indicating use of offensive and hateful language targeting
+        abused communities in the article. Possible values are: not detected,
+        offensive or hateful language detected
       </SingleResult>
     {/if}
     {#if !biasScore.predictions?.hyperpartisan?.error}
       <SingleResult
         label="Political bias"
         value={biasScore.predictions?.hyperpartisan?.prediction}
-        >Political bias tooltip</SingleResult
-      >
+        >A measure indicating political polarization or hyper partisanism of the
+        article. It can be either to the left (liberal) or to the right
+        (conservative). Possible values are: detected or not detected.
+      </SingleResult>
     {/if}
     {#if !biasScore.predictions?.stance?.error}
       <SingleResult
         label="Stance"
         value={biasScore.predictions?.stance?.prediction}
-        >Stance tooltip</SingleResult
-      >
+        >A measure assessing relation between article’s title and its content.
+        Possible values are: balanced, misleading, complementary and critical.
+      </SingleResult>
     {/if}
   </Card>
 </List>
