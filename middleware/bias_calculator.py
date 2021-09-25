@@ -2,7 +2,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-UNBIASED, BIASED, STRONGLY_BIASED = 'UNBIASED', "BIASED", 'STRONGLY_BIASED'
+BALANCED, TAKING_STANCE, MISLEADING, BIASED, STRONGLY_BIASED = 'BALANCED', 'TAKING_STANCE', 'MISLEADING', "BIASED", 'STRONGLY_BIASED'
 
 class BiasCalculator:
     def __init__(self):
@@ -25,7 +25,11 @@ class BiasCalculator:
         if self.__is_biased(predictions):
             return BIASED
         
-        return UNBIASED
+        if predictions['stance']['prediction'] == 'DISCUSS':
+            return BALANCED
+        if predictions['stance']['prediction'] == 'UNRELATED':
+            return MISLEADING
+        return TAKING_STANCE
 
     def __only_hatespeech_and_hyperpartisan(self, predictions):
         if predictions['hatespeech']['prediction'] != 'NORMAL' and predictions['hyperpartisan']['prediction'] == 'HYPERPARTISAN':
