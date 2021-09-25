@@ -1,45 +1,31 @@
 <script lang="ts">
   import type { BiasScore } from "../background";
+  import SingleResult from "./SingleResult.svelte";
+  import List from "@smui/list";
 
   export let biasScore: BiasScore = null;
 </script>
 
-{#if biasScore.bias}
-  <div>
-    <label for="biasScore">Main Score</label>
-    <span id="biasScore">{biasScore.bias.toLowerCase()}</span>
-  </div>
-{/if}
-
-{#if biasScore?.predictions?.hate_speech}
-  <div class="single_result">
-    <label for="hateSpeech">Hate Speech</label>
-    <span id="hateSpeech">
-      {biasScore?.predictions?.hate_speech.toLowerCase()}
-    </span>
-  </div>
-{/if}
-
-{#if biasScore?.predictions?.hyperpartizan}
-  <div class="single_result">
-    <label for="hyperpartizan">Hyperpartizan</label>
-    <span id="hyperpartizan">
-      {biasScore?.predictions?.hyperpartizan.toLowerCase()}
-    </span>
-  </div>
-{/if}
-
-{#if biasScore?.predictions?.stance}
-  <div class="single_result">
-    <label for="stance">Stance</label>
-    <span id="stance">
-      {biasScore?.predictions?.stance.toLowerCase()}
-    </span>
-  </div>
-{/if}
+<List class="demo-list" twoLine nonInteractive>
+  {#if biasScore.bias}
+    <SingleResult label="Main Score" value={biasScore.bias} />
+  {/if}
+  {#if biasScore.predictions?.hatespeech}
+    <SingleResult
+      label="Communication type"
+      value={biasScore.predictions?.hatespeech}
+    />
+  {/if}
+  {#if biasScore.predictions?.hyperpartisan}
+    <SingleResult
+      label="Political bias"
+      value={biasScore.predictions?.hyperpartisan}
+    />
+  {/if}
+  {#if biasScore.predictions?.stance}
+    <SingleResult label="Stance" value={biasScore.predictions?.stance} />
+  {/if}
+</List>
 
 <style type="text/scss">
-  .single_result {
-    width: 100%;
-  }
 </style>

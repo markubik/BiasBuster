@@ -1,14 +1,14 @@
 import type { Message } from "./content_script";
 
 export type HateSpeechType = "NORMAL" | "OFFENSIVE" | "HATESPEECH"
-export type HyperpartizanType = "NORMAL" | "HYPERPARTIZAN"
+export type HyperpartisanType = "NORMAL" | "HYPERPARTISAN"
 export type StanceType = "UNRELATED" | "AGREE" | "DISAGREE" | "DISCUSS"
 
 export interface Bias {
     bias: 'UNBIASED' | 'BIASED' | 'STRONGLY_BIASED'
     predictions: {
         hatespeech: HateSpeechType,
-        hyperpartizan: HyperpartizanType,
+        hyperpartisan: HyperpartisanType,
         stance: StanceType
     }
 }
@@ -27,7 +27,7 @@ chrome.tabs.onActivated.addListener(activeInfo =>
         }));
 
 
-async function fetchData(url: string, timeout = 8000) {
+async function fetchData(url: string, timeout = 15000) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
     chrome.action.setIcon({ path: "/icons/cat-icon.png" });
@@ -40,12 +40,14 @@ async function fetchData(url: string, timeout = 8000) {
         signal: controller.signal,
         body: JSON.stringify({ message: url })
     });
+    console.log('Received data', result);
     clearTimeout(id);
     return result;
 }
 
 async function handlePageInitialized(tabId) {
     chrome.tabs.get(tabId, async tab => {
+        chrome.action.setIcon({ path: "/icons/loading-icon.png" });
         let result = await fetchData(tab.url);
         result = await result.json();
         results[new URL(tab.url).hostname] = result;

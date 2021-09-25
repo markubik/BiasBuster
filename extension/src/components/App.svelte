@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Bias } from "../background";
-
   import type { Message } from "../content_script";
 
   import Data from "./Data.svelte";
