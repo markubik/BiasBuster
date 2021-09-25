@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { BiasScore } from "../background";
 
-  export let biasScore: BiasScore;
+  export let biasScore: BiasScore = null;
 </script>
 
 {#if biasScore.bias}

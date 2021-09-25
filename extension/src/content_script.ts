@@ -1,3 +1,4 @@
+import type { Bias } from "./background";
 
 export type MessageType = 'PAGE_INITIALIZED' | 'POPUP_INITIALIZED' | 'SEND_DATA';
 
@@ -12,7 +13,7 @@ export type PopupInitializedMessage = {
 
 export type SendDataMessage = {
     type: 'SEND_DATA',
-    data: object
+    data: Bias
 }
 
 export type Message = PageInitializedMessage | PopupInitializedMessage | SendDataMessage;

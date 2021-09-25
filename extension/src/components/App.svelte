@@ -1,9 +1,11 @@
 <script lang="ts">
+  import type { Bias } from "../background";
+
   import type { Message } from "../content_script";
 
-  import Reader from "./Reader.svelte";
+  import Data from "./Data.svelte";
 
-  let articleTitle: string = null;
+  let biasScore: Bias = null;
 
   chrome.tabs.query(
     { active: true, lastFocusedWindow: true },
@@ -15,26 +17,19 @@
 
   chrome.runtime.onMessage.addListener((message: Message) => {
     if (message.type === "SEND_DATA") {
-      //TODO Present results
+      biasScore = message.data;
     }
   });
 </script>
 
 <div class="container">
-  <div>
-    {#if articleTitle}<span class="success">Article title: {articleTitle}</span>
-    {/if}
-  </div>
-  <Reader />
+  {#if biasScore}
+    <Data {biasScore} />
+  {/if}
 </div>
 
 <style>
   .container {
     min-width: 250px;
-  }
-
-  .success {
-    color: #2ecc71;
-    font-weight: bold;
   }
 </style>

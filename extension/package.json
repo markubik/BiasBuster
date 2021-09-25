@@ -17,6 +17,7 @@
         "@tsconfig/svelte": "^1.0.10",
         "@types/chrome": "0.0.135",
         "axios": "^0.21.4",
+        "sass": "1.42.1",
         "rollup": "^2.45.2",
         "rollup-plugin-css-only": "^3.1.0",
         "rollup-plugin-svelte": "^7.0.0",
