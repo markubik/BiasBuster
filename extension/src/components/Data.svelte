@@ -19,19 +19,23 @@
       <SingleResult
         label="Communication type"
         value={biasScore.predictions?.hatespeech.prediction}
-      />
+      >
+        Communication type tooltip
+      </SingleResult>
     {/if}
     {#if !biasScore.predictions?.hyperpartisan?.error}
       <SingleResult
         label="Political bias"
         value={biasScore.predictions?.hyperpartisan?.prediction}
-      />
+        >Political bias tooltip</SingleResult
+      >
     {/if}
     {#if !biasScore.predictions?.stance?.error}
       <SingleResult
         label="Stance"
         value={biasScore.predictions?.stance?.prediction}
-      />
+        >Stance tooltip</SingleResult
+      >
     {/if}
   </Card>
 </List>

@@ -8,12 +8,12 @@
 
 <Item>
   <Text>
-    <PrimaryText>
-      <Wrapper>
-        <span>{label}</span>
-        <Tooltip>Fajny tooltip</Tooltip>
-      </Wrapper>
-    </PrimaryText>
+    <Wrapper>
+      <PrimaryText>
+        {label} <i class="fa fa-question" style="font-size:16px;" />
+        <Tooltip><slot /></Tooltip>
+      </PrimaryText>
+    </Wrapper>
     <SecondaryText>
       <div class="single_result">{value.toLowerCase()}</div>
     </SecondaryText>

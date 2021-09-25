@@ -45,7 +45,7 @@ async function fetchData(url: string, timeout = 8000) {
     }, timeout);
     chrome.action.setIcon({ path: "/icons/loading-icon.png" });
 
-    const result = await fetch('http://52.149.65.149:5000/predict', {
+    const result = await fetch('http://localhost:5000/resource', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
