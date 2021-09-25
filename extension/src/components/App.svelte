@@ -4,8 +4,10 @@
 
   import Data from "./Data.svelte";
   import Header from "./Header.svelte";
+  import Error from "./Error.svelte";
 
   let biasScore: Bias = null;
+  let isOk: boolean = true;
 
   chrome.tabs.query(
     { active: true, lastFocusedWindow: true },
@@ -19,12 +21,20 @@
     if (message.type === "SEND_DATA") {
       biasScore = message.data;
     }
+    if (message.type === "ERROR") {
+      console.log("error");
+      console.log(message.data);
+      isOk = false;
+    }
   });
 </script>
 
 <div class="container">
   <Header />
-  {#if biasScore}
+  {#if !isOk}
+    <Error />
+  {/if}
+  {#if biasScore && isOk}
     <Data {biasScore} />
   {/if}
 </div>

@@ -15,20 +15,23 @@
     </Card>
   {/if}
   <Card padded>
-    {#if biasScore.predictions?.hatespeech}
+    {#if !biasScore.predictions?.hatespeech?.error}
       <SingleResult
         label="Communication type"
-        value={biasScore.predictions?.hatespeech}
+        value={biasScore.predictions?.hatespeech.prediction}
       />
     {/if}
-    {#if biasScore.predictions?.hyperpartisan}
+    {#if !biasScore.predictions?.hyperpartisan?.error}
       <SingleResult
         label="Political bias"
-        value={biasScore.predictions?.hyperpartisan}
+        value={biasScore.predictions?.hyperpartisan?.prediction}
       />
     {/if}
-    {#if biasScore.predictions?.stance}
-      <SingleResult label="Stance" value={biasScore.predictions?.stance} />
+    {#if !biasScore.predictions?.stance?.error}
+      <SingleResult
+        label="Stance"
+        value={biasScore.predictions?.stance?.prediction}
+      />
     {/if}
   </Card>
 </List>

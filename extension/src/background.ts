@@ -4,58 +4,101 @@ export type HateSpeechType = "NORMAL" | "OFFENSIVE" | "HATESPEECH"
 export type HyperpartisanType = "NORMAL" | "HYPERPARTISAN"
 export type StanceType = "UNRELATED" | "AGREE" | "DISAGREE" | "DISCUSS"
 
+export interface BasicPrediction {
+    error: string;
+    name: string;
+}
+
 export interface Bias {
     bias: 'UNBIASED' | 'BIASED' | 'STRONGLY_BIASED'
     predictions: {
-        hatespeech: HateSpeechType,
-        hyperpartisan: HyperpartisanType,
-        stance: StanceType
+        hatespeech: BasicPrediction & { prediction: HateSpeechType },
+        hyperpartisan: BasicPrediction & { prediction: HyperpartisanType },
+        stance: BasicPrediction & { prediction: StanceType }
     }
 }
 
 const results = {};
 
-chrome.tabs.onActivated.addListener(activeInfo =>
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     chrome.runtime.onMessage.addListener(
-        (message: Message) => {
+        function messageListener(message: Message) {
+            chrome.runtime.onMessage.removeListener(messageListener);
             if (message.type === 'PAGE_INITIALIZED') {
-                handlePageInitialized(activeInfo.tabId);
+                handlePageInitialized(tabId);
             }
             else if (message.type === 'POPUP_INITIALIZED') {
                 handlePopupInitialized(message.url);
             }
-        }));
+        })
+    const result = results[generateKeyFromStringUrl(tab.url)];
+    if (result) {
+        handleIcon(result.bias);
+    }
+});
 
-
-async function fetchData(url: string, timeout = 15000) {
+async function fetchData(url: string, timeout = 8000) {
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
-    chrome.action.setIcon({ path: "/icons/cat-icon.png" });
-    const result = await fetch('http://localhost:5000/resource', {
+    const id = setTimeout(() => {
+        chrome.action.setIcon({ path: "/icons/Error-icon.png" });
+        controller.abort();
+    }, timeout);
+    chrome.action.setIcon({ path: "/icons/loading-icon.png" });
+
+    const result = await fetch('http://52.149.65.149:5000/predict', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
         signal: controller.signal,
-        body: JSON.stringify({ message: url })
+        body: JSON.stringify({ url })
     });
-    console.log('Received data', result);
     clearTimeout(id);
     return result;
 }
 
+
+function generateKeyFromStringUrl(url: string): string {
+    const hostname = new URL(url).hostname;
+    const domain = new URL(url).pathname;
+    return `${hostname}:${domain}`;
+}
+
 async function handlePageInitialized(tabId) {
     chrome.tabs.get(tabId, async tab => {
-        chrome.action.setIcon({ path: "/icons/loading-icon.png" });
+        chrome.action.setIcon({ path: "/icons/cat-icon.png" });
         let result = await fetchData(tab.url);
+        if (!result.ok) {
+            chrome.action.setIcon({ path: "/icons/Error-icon.png" });
+            return;
+        }
         result = await result.json();
-        results[new URL(tab.url).hostname] = result;
-        chrome.action.setIcon({ path: "/icons/Flag-green-icon.png" });
+        console.log('parsed JSON');
+        console.log(result);
+        results[generateKeyFromStringUrl(tab.url)] = result;
+        handleIcon((result as any).bias);
     });
 }
 
+function handleIcon(bias) {
+    switch (bias) {
+        case 'UNBIASED':
+            chrome.action.setIcon({ path: "/icons/Flag-green-icon.png" });
+            return;
+        case 'BIASED':
+            chrome.action.setIcon({ path: "/icons/Flag-yellow-icon.png" });
+            return;
+        case 'STRONGLY_BIASED':
+            chrome.action.setIcon({ path: "/icons/Flag-red-icon.png" });
+            return;
+    }
+}
 function handlePopupInitialized(pageUrl) {
-    const url = new URL(pageUrl);
-    chrome.runtime.sendMessage({ type: 'SEND_DATA', data: results[url.hostname] })
+    const result = results[generateKeyFromStringUrl(pageUrl)];
+    if (result) {
+        chrome.runtime.sendMessage({ type: 'SEND_DATA', data: results[generateKeyFromStringUrl(pageUrl)] })
+    } else {
+        chrome.runtime.sendMessage({ type: 'ERROR', data: "Something went wrong" });
+    }
 }

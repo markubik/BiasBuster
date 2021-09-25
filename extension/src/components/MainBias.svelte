@@ -13,5 +13,7 @@
 </Item>
 
 <style type="text/scss">
-    
+  :global(.main_result) {
+    text-transform: capitalize;
+  }
 </style>

@@ -1,6 +1,6 @@
 import type { Bias } from "./background";
 
-export type MessageType = 'PAGE_INITIALIZED' | 'POPUP_INITIALIZED' | 'SEND_DATA';
+export type MessageType = 'PAGE_INITIALIZED' | 'POPUP_INITIALIZED' | 'SEND_DATA' | 'ERROR';
 
 export type PageInitializedMessage = {
     type: 'PAGE_INITIALIZED'
@@ -16,6 +16,11 @@ export type SendDataMessage = {
     data: Bias
 }
 
-export type Message = PageInitializedMessage | PopupInitializedMessage | SendDataMessage;
+export type ErrorMessage = {
+    type: 'ERROR',
+    data: string
+}
+
+export type Message = PageInitializedMessage | PopupInitializedMessage | SendDataMessage | ErrorMessage;
 
 chrome.runtime.sendMessage({ type: "PAGE_INITIALIZED" });
