@@ -19,8 +19,18 @@ export interface Bias {
 }
 
 const results = {};
-
+let currentUrl = null;
 chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
+    if (currentUrl === tab.url) {
+        console.log('already handled');
+        return;
+    }
+    currentUrl = tab.url;
+    const result = results[generateKeyFromStringUrl(tab.url)];
+    if (result) {
+        handleIcon(result.bias);
+        return;
+    }
     chrome.runtime.onMessage.addListener(
         function messageListener(message: Message) {
             if (message.type === 'PAGE_INITIALIZED') {
@@ -30,10 +40,6 @@ chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
                 handlePopupInitialized(message.url);
             }
         })
-    const result = results[generateKeyFromStringUrl(tab.url)];
-    if (result) {
-        handleIcon(result.bias);
-    }
 });
 
 async function fetchData(url: string, timeout = 8000) {
@@ -65,8 +71,6 @@ function generateKeyFromStringUrl(url: string): string {
 }
 
 function setIcon(path) {
-    console.log('path');
-    console.log(path);
     chrome.action.setIcon({ path });
 }
 async function handlePageInitialized(tabId) {
@@ -103,6 +107,8 @@ function handleIcon(bias) {
 function handlePopupInitialized(pageUrl) {
     const result = results[generateKeyFromStringUrl(pageUrl)];
     if (result) {
+        console.log('Sending result for:');
+        console.log(pageUrl);
         chrome.runtime.sendMessage({ type: 'SEND_DATA', data: results[generateKeyFromStringUrl(pageUrl)] })
     } else {
         chrome.runtime.sendMessage({ type: 'ERROR', data: "Something went wrong" });

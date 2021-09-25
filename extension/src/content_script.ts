@@ -22,5 +22,4 @@ export type ErrorMessage = {
 }
 
 export type Message = PageInitializedMessage | PopupInitializedMessage | SendDataMessage | ErrorMessage;
-
 chrome.runtime.sendMessage({ type: "PAGE_INITIALIZED" });
