@@ -3,6 +3,7 @@
   import type { Message } from "../content_script";
 
   import Data from "./Data.svelte";
+  import Header from "./Header.svelte";
 
   let biasScore: Bias = null;
 
@@ -22,13 +23,18 @@
 </script>
 
 <div class="container">
+  <Header />
   {#if biasScore}
     <Data {biasScore} />
   {/if}
 </div>
 
 <style>
+  :global(body) {
+    background-color: #5cdb95;
+  }
   .container {
+    border-radius: 10px;
     min-width: 250px;
   }
 </style>

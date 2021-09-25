@@ -1,5 +1,6 @@
 <script lang="ts">
-  import List, { Item, Text, PrimaryText, SecondaryText } from "@smui/list";
+  import { Item, Text, PrimaryText, SecondaryText } from "@smui/list";
+  import Tooltip, { Wrapper } from "@smui/tooltip";
 
   export let label: string = null;
   export let value: string = null;
@@ -7,10 +8,15 @@
 
 <Item>
   <Text>
-    <PrimaryText>{label}</PrimaryText>
-    <SecondaryText class="single_result"
-      ><div class="single_result">{value.toLowerCase()}</div></SecondaryText
-    >
+    <PrimaryText>
+      <Wrapper>
+        <span>{label}</span>
+        <Tooltip>Fajny tooltip</Tooltip>
+      </Wrapper>
+    </PrimaryText>
+    <SecondaryText>
+      <div class="single_result">{value.toLowerCase()}</div>
+    </SecondaryText>
   </Text>
 </Item>
 
@@ -20,8 +26,5 @@
   }
   :global(.single_result) {
     text-transform: capitalize;
-  }
-  :global(.single_result::before) {
-    content: "";
   }
 </style>
