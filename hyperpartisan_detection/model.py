@@ -24,7 +24,8 @@ class HyperpartisanModel:
         if not self.loaded:
             raise Excpetion('You must load model first!')
 
-        inputs = self.tokenizer(text, return_tensors="pt")
+        truncated_text = text[:4098]
+        inputs = self.tokenizer(truncated_text, return_tensors="pt")
         labels = torch.tensor([1]).unsqueeze(0)
         outputs = self.model(**inputs, labels=labels) #TODO investigate performance
 
