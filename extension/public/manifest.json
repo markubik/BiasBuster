@@ -4,10 +4,10 @@
     "version": "1.0",
     "manifest_version": 3,
     "icons": {
-        "16": "/icons/cat-icon.png",
-        "32": "/icons/cat-icon.png",
-        "48": "/icons/cat-icon.png",
-        "128": "/icons/cat-icon.png"
+        "16": "/icons/scale-icon.png",
+        "32": "/icons/scale-icon.png",
+        "48": "/icons/scale-icon.png",
+        "128": "/icons/scale-icon.png"
     },
     "content_scripts": [
         {
