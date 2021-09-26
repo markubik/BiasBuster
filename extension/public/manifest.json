@@ -1,6 +1,6 @@
 {
-    "name": "Hackathon",
-    "description": "Hackathon",
+    "name": "Bias Buster",
+    "description": "Article bias measuring tool",
     "version": "1.0",
     "manifest_version": 3,
     "icons": {

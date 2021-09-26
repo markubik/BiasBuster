@@ -1,5 +1,5 @@
 {
-    "name": "hackathon",
+    "name": "bias-buster",
     "version": "1.1.0",
     "repository": {
         "type": "git"
@@ -11,13 +11,9 @@
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^18.0.0",
+        "@rollup/plugin-json": "4.1.0",
         "@rollup/plugin-node-resolve": "^11.2.1",
         "@rollup/plugin-typescript": "^8.2.1",
-        "@rollup/plugin-json": "4.1.0",
-        "@tsconfig/svelte": "^1.0.10",
-        "@types/chrome": "0.0.135",
-        "axios": "^0.21.4",
-        "sass": "1.42.1",
         "@smui/button": "4.1.*",
         "@smui/card": "4.1.*",
         "@smui/common": "4.1.*",
@@ -26,10 +22,14 @@
         "@smui/linear-progress": "4.1.*",
         "@smui/list": "4.1.*",
         "@smui/tooltip": "4.1.*",
+        "@tsconfig/svelte": "^1.0.10",
+        "@types/chrome": "0.0.135",
+        "axios": "^0.21.4",
         "rollup": "^2.45.2",
         "rollup-plugin-css-only": "^3.1.0",
         "rollup-plugin-svelte": "^7.0.0",
         "rollup-plugin-terser": "^7.0.2",
+        "sass": "1.42.1",
         "svelte": "^3.37.0",
         "svelte-check": "^1.5.2",
         "svelte-preprocess": "^4.7.2",

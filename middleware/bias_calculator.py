@@ -45,5 +45,4 @@ class BiasCalculator:
 
     def __is_biased(self, predictions):
         return predictions['hatespeech']['prediction'] != 'NORMAL' or \
-                predictions['hyperpartisan']['prediction'] == 'HYPERPARTISAN' or \
-                predictions['stance']['prediction'] != 'DISCUSS'
+                predictions['hyperpartisan']['prediction'] == 'HYPERPARTISAN'
