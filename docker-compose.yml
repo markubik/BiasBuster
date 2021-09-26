@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  middleware:
+    build: ./middleware
+    ports:
+      - "5000:5000"
+    restart: on-failure
+  hatespeech:
+    build: ./hate_speech_detection
+    ports:
+      - "5100:5100"
+    restart: on-failure
+  hyperpartisan:
+    build: ./hyperpartisan_detection
+    ports:
+      - "5200:5200"
+    restart: on-failure
+  stance:
+    build: ./stance_detection
+    ports:
+      - "5300:5300"
+    restart: on-failure
